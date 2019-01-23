@@ -1,0 +1,31 @@
+{
+  "name": "brontrixnodeapi",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "~1.4.3",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "express-jwt": "^5.3.1",
+    "http-errors": "~1.6.2",
+    "jsonwebtoken": "^8.4.0",
+    "moment": "^2.23.0",
+    "mongodb": "^3.1.12",
+    "mongoose": "^5.4.5",
+    "morgan": "~1.9.0",
+    "nodemailer": "^5.1.1",
+    "pug": "2.0.0-beta11",
+    "randomstring": "^1.1.5",
+    "sync-request": "^6.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.12.1",
+    "eslint-plugin-prettier": "^3.0.1",
+    "nodemon": "^1.18.9"
+  }
+}
