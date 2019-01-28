@@ -5,11 +5,11 @@ const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const randomstring = require("randomstring");
 const config = require('../config/config.js');
-const Role = require('../models/role.model.js');
 const User = require('../models/auth.model.js');
 
+
+// user login
 authentificationCtrl.login = (req, res) => {
-    console.log("login...");
     User.findOne({
             email: req.body.email
         }).exec()
@@ -29,9 +29,11 @@ authentificationCtrl.login = (req, res) => {
             });
 
             res.status(200).send({
+                uid: user._id,
                 auth: true,
                 accessToken: token,
-                uid:user._id
+                refreshToken: null,
+                expiresIn: 86400
             });
         })
         .catch(error => {
@@ -41,71 +43,93 @@ authentificationCtrl.login = (req, res) => {
                 });
             }
             return res.status(500).send({
-                message: "No se pudo encoontrar este usuario " + req.body.email
+                message: "No se pudo encontrar este usuario " + req.body.email
             });
         });
 };
 
-authentificationCtrl.singup = (req, res) => {
+// ======================================================================= //
+//                  create user
+// ====================================================================== //
+// Create User
+authentificationCtrl.signup = (req, res) => {
+    // req.assert('username', 'Name cannot be blank').notEmpty();
+    // req.assert('email', 'Email is not valid').isEmail();
+    // req.assert('email', 'Email cannot be blank').notEmpty();
+    // req.assert('password', 'Password must be at least 4 characters long').len(4);
+    // // check validation errors.
+    // var errors = req.validationErrors();
+    // if (errors) {
+    //     return res.status(400).send(errors);
+    // }
     // Save User to Database
-    console.log("Processing func -> SignUp");
-    const currentDate = new Date();
-
+    const token = randomstring.generate({
+        length: 20,
+        charset: 'alphabetic'
+    });
     const user = new User({
         username: req.body.username,
         email: req.body.email,
+        role: req.body.role.toUpperCase(),
+        verifiedToken: token,
+        verifiedTokenExpires: 259200,
         password: bcrypt.hashSync(req.body.password, 8)
     });
-    user.save().then(savedUser => {
-        Role.find({
-            'name': {
-                $in: req.body.roles.map(role => role.toUpperCase())
+    user.save().then(userSaved => {
+        // Create a verification token for this user
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: config.senderMail,
+                pass: config.senderPassword
             }
-        }, (err, roles) => {
-            if (err)
-                res.status(500).send("Error -> " + err);
-
-            // update User with Roles
-            savedUser.roles = roles.map(role => role._id);
-            savedUser.save(function (err) {
-                if (err)
-                    res.status(500).send("Error -> " + err);
-
-                res.send("User registered successfully!");
-            });
+        });
+        var mailOptions = {
+            from: config.senderMail,
+            to: userSaved.email,
+            subject: 'Verificación de cuenta.',
+            text: 'Bienvenido /da a nuestra plataforma,\n\n' + 'Haga clic en el link que se muestra a continuación para completar el proceso de registro de su cuenta.: \nhttp:\/\/' + req.headers.host + '\/api\/' + '\/confirmation\/' + token + '.\n'
+        };
+        transporter.sendMail(mailOptions, function (err) {
+            if (err) {
+                return res.status(500).send({
+                    msg: err.message
+                });
+            }
+            res.status(200).send('A verification email has been sent to ' + user.email + '.');
         });
     }).catch(err => {
         res.status(500).send("Fail! Error -> " + err);
     });
 };
 
+// ======================================================================= //
+//                  get user by id
+// ====================================================================== //
 authentificationCtrl.getUserData = (req, res) => {
-
     User.findById({
             _id: req.params.id
         })
         .select('-__v -password -created_at -updated_at')
-        .populate('roles', '-_id -__v')
         .exec((err, user) => {
             if (err) {
                 if (err.kind === 'ObjectId') {
                     return res.status(404).send({
-                        message: "User not found with _id = " + req.params.id
+                        message: "No existe usuario con este id." + req.params.id
                     });
                 }
                 return res.status(500).send({
-                    message: "Error retrieving User with _id = " + req.params.id
+                    message: "Ha ocurrido un error inesperado, intente otra vez." + req.params.id
                 });
             }
-
-            res.status(200).json({
-                "description": "User Content Page",
-                "user": user
-            });
+            res.status(200).json(user);
         });
 };
 
 
+// ======================================================================= //
+//                  forgot password
+// ====================================================================== //
 authentificationCtrl.forgot = (req, res) => {
     User.findOne({
         email: req.body.email
@@ -119,9 +143,10 @@ authentificationCtrl.forgot = (req, res) => {
         userFound.updated_at = Date.now()
         User.update({
             email: userFound.email
-        }, {resetPasswordToken:token,
+        }, {
+            resetPasswordToken: token,
             resetPasswordExpires: Date.now() + 3600000,
-            updated_at:Date.now()
+            updated_at: Date.now()
         }).then((userUpdated) => {
             console.log(userUpdated);
             const smtpTransport = nodemailer.createTransport('SMTP', {
@@ -140,7 +165,7 @@ authentificationCtrl.forgot = (req, res) => {
                     'http://' + req.headers.host + '/reset/' + token + '\n\n' +
                     'If you did not request this, please ignore this email and your password will remain unchanged.\n'
             };
-            smtpTransport.sendMail(mailOptions, function (err, success) {
+            smtpTransport.sendMail(mailOptions, function (err) {
                 if (err) {
                     return res.status(500).send({
                         message: "Error sending message = " + req.body.email
@@ -170,11 +195,14 @@ authentificationCtrl.forgot = (req, res) => {
     });
 };
 
+// ======================================================================= //
+//                  Reset Password
+// ====================================================================== //
 authentificationCtrl.reset = (req, res) => {
     User.findOne({
         resetPasswordToken: req.params.token,
         resetPasswordExpires: {
-            $gt: Date.now()
+            $gt: Date.now()-259200
         }
     }).exec().then((userFound) => {
         res.status(200).json({
@@ -189,6 +217,35 @@ authentificationCtrl.reset = (req, res) => {
         }
         return res.status(500).send({
             message: "Error retrieving User with Username = " + req.body.email
+        });
+    });
+};
+
+// ======================================================================= //
+//                  confirm email
+// ====================================================================== //
+
+authentificationCtrl.confirmation = (req, res) => {
+    User.findOne({
+        verifiedToken: req.params.token,
+        verifiedTokenExpires: {
+            $gt: Date.now()
+        }
+    }).exec().then((userFound) => {
+        if (userFound.verified) {
+            return res.status(400).json({ message: 'El usuario ha sido verificado anteriormente.' });
+        }
+        res.status(200).json({
+            message: 'EL usuario se verificó correctamente.',
+        });
+    }).catch(error => {
+        if (error.kind === 'ObjectId') {
+            return res.status(404).send({
+                message: "El token es invalido y/o vencido."
+            });
+        }
+        return res.status(500).send({
+            message: "Ha ocurrido un error recuperando verificando el usuario."
         });
     });
 };

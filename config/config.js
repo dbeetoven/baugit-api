@@ -17,6 +17,8 @@
 module.exports = {
     secret: 'br:231!rqk643@_&hasd$vsad&$vwbssd74?',
     url: 'mongodb://localhost:27017/gkzdb',
-    ROLES: ['USER', 'ADMIN', 'PM'],
+    senderMail: 'noreply.brontrixtesting@gmail.com',
+    senderPassword:'Brontrix2018',
+    ROLES: ['USER', 'ADMIN', 'PF'],
     database: 'mongodb://dbeetoven:41Rdq0criPf29GyD@brontrix-shard-00-00-scfll.mongodb.net:27017,brontrix-shard-00-01-scfll.mongodb.net:27017,brontrix-shard-00-02-scfll.mongodb.net:27017/test?ssl=true&replicaSet=Brontrix-shard-0&authSource=admin&retryWrites=true'
 };

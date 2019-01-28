@@ -5,7 +5,7 @@ const verifySignUp = require('../middlewares/verifySignUp');
 const authJwt = require('../middlewares/verifyJwtToken');
 
 router.post('/login', auhtCtrl.login);
-router.post('/signup', [verifySignUp.checkDuplicateUserNameOrEmail, verifySignUp.checkRolesExisted], auhtCtrl.singup);
+router.post('/signup', [verifySignUp.checkDuplicateUserNameOrEmail], auhtCtrl.signup);
 router.get('/me/:id', [authJwt.verifyToken], auhtCtrl.getUserData);
 router.get('/forgot',auhtCtrl.forgot);
 router.get('/reset/:token', auhtCtrl.reset);

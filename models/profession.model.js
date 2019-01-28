@@ -1,12 +1,17 @@
 const mongoose = require('mongoose');
 
 const ProfessionSchema = mongoose.Schema({
-    _id: { type: String, default: _ => uuid()},
-    name: {
+    title: {
         type: String,
         required: true,
-        maxlength: 256
+        maxlength: 256,
+        unique: true
     },
+    description: {
+        type: String,
+        required: true,
+        maxlength: 256,
+    }
 });
 
-module.exports = mongoose.model('Profession', ProfessionSchema);
+module.exports = mongoose.model('Professions', ProfessionSchema);
