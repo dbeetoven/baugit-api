@@ -17,9 +17,8 @@ authentificationCtrl.login = (req, res) => {
             var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
             if (!passwordIsValid) {
                 return res.status(401).send({
-                    auth: false,
-                    accessToken: null,
-                    reason: "Invalid Password!"
+                    message: "Usuario o Clave invalido",
+                    reason: "Dato invalido.!"
                 });
             }
             var token = jwt.sign({
@@ -30,7 +29,7 @@ authentificationCtrl.login = (req, res) => {
 
             res.status(200).send({
                 uid: user._id,
-                auth: true,
+                authorized: true,
                 accessToken: token,
                 refreshToken: null,
                 expiresIn: 86400
@@ -43,10 +42,11 @@ authentificationCtrl.login = (req, res) => {
                 });
             }
             return res.status(500).send({
+                reason: "No se pudo encontrar este usuario " + req.body.email,
                 message: "No se pudo encontrar este usuario " + req.body.email
             });
         });
-};
+}
 
 // ======================================================================= //
 //                  create user
@@ -96,10 +96,27 @@ authentificationCtrl.signup = (req, res) => {
                     msg: err.message
                 });
             }
-            res.status(200).send('A verification email has been sent to ' + user.email + '.');
+            var _token = jwt.sign({
+                id: user._id
+            }, config.secret, {
+                expiresIn: 86400 // expires in 24 hours
+            });
+
+            res.status(200).send({
+                message: "Se ha enviado un mensaje a su correo: " + req.body.email,
+                uid: userSaved._id,
+                authorized: true,
+                accessToken: _token,
+                refreshToken: null,
+                expiresIn: 86400
+            });
+
+        }).catch(err => {
+            res.status(500).send({
+                reason: "No se pudo efectuar la operacion" + req.body.email,
+                message: "El usuario no se guardo."
+            });
         });
-    }).catch(err => {
-        res.status(500).send("Fail! Error -> " + err);
     });
 };
 
@@ -202,7 +219,7 @@ authentificationCtrl.reset = (req, res) => {
     User.findOne({
         resetPasswordToken: req.params.token,
         resetPasswordExpires: {
-            $gt: Date.now()-259200
+            $gt: Date.now() - 259200
         }
     }).exec().then((userFound) => {
         res.status(200).json({
@@ -233,7 +250,9 @@ authentificationCtrl.confirmation = (req, res) => {
         }
     }).exec().then((userFound) => {
         if (userFound.verified) {
-            return res.status(400).json({ message: 'El usuario ha sido verificado anteriormente.' });
+            return res.status(400).json({
+                message: 'El usuario ha sido verificado anteriormente.'
+            });
         }
         res.status(200).json({
             message: 'EL usuario se verificó correctamente.',
