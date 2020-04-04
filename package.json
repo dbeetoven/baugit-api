@@ -5,6 +5,7 @@
   "scripts": {
     "start": "nodemon ./bin/www"
   },
+  "author": {"name": "dbeetoven"},
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-parser": "~1.4.5",
@@ -24,6 +25,7 @@
     "sync-request": "^6.1.0"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "eslint": "^6.8.0",
     "eslint-plugin-prettier": "^3.1.2",
     "nodemon": "^2.0.2"
