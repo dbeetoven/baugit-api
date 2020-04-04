@@ -1,20 +1,20 @@
-const supportCtrl = {};
-const Support = require('../models/support.model.js');
+const professionCtrl = {};
+const Profession = require('../models/profession.model.js');
 
 
-supportCtrl.getAll = (req, res) => {
-    Support.find().select('-__v -created_at -updated_at').exec().then((supports) => {
+professionCtrl.getAll = (req, res) => {
+    Profession.find().select('-__v -created_at -updated_at').exec().then((supports) => {
         res.status(200).json(supports);
     }).catch(err => {
         res.status(500).send("Fail! Error -> " + err);
     });
 };
 
-supportCtrl.create = (req, res) => {
+professionCtrl.create = (req, res) => {
     console.log("Processing func -> create support.");
-    const support = new Support(req.body);
-    support.save().then(supportSaved => {
-        console.log(JSON.stringify(supportSaved));
+    const Profession = new Support(req.body);
+    Profession.save().then(professionSaved => {
+        console.log(JSON.stringify(professionSaved));
         res.status(200)
             .json({
                 message: "Message registered successfully!"
@@ -27,4 +27,4 @@ supportCtrl.create = (req, res) => {
     });
 };
 
-module.exports = supportCtrl;
+module.exports = professionCtrl;

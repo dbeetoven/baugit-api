@@ -9,7 +9,9 @@ const User = require('../models/auth.model.js');
 
 
 // user login
-authentificationCtrl.login = (req, res) => {
+authentificationCtrl.login = (req, res,next) => {
+    console.log(req);
+    
     User.findOne({
             email: req.body.email
         }).exec()

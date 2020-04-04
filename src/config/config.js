@@ -9,4 +9,8 @@ module.exports = {
   senderPassword: process.env.SENDER_PASSWORD,
   ROLES: process.env.ROLES,
   database: process.env.MONGO_URL,
+  googleCLientId: process.env.GOOGLE_CLIENT_ID,
+  googleClientSecret:process.env.GOOGLE_CLIENT_SECRET,
+  googleCallBack:process.env.GOOGLE_CALLBACK_URL,
+  sessionSecret:process.env.SESSION_SECRET
 };
