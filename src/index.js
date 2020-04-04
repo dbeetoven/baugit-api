@@ -7,16 +7,19 @@ const logger = require('morgan');
 const cors = require('cors');
 const config = require('./config/config'); // get our config file
 
+var passport = require('passport');
+var session = require('express-session');
+
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 // Routes Path
 const indexRouter = require('./routes/index');
-const authRouter = require('./routes/auth.routes');
 const profilRouter = require('./routes/profil.routes');
 const postRouter = require('./routes/post.routes');
 const supportRouter = require('./routes/support.routes');
 const professionRouter = require('./routes/profession.routes');
+const authRouter=require('./routes/auth.routes');
 
 // Express
 const app = express();
@@ -27,7 +30,7 @@ app.set('view engine', 'pug');
 
 // settings 
 const corsOptions = {
-	origin: 'http://localhost:4200',
+	origin: 'http://localhost:3000',
 	optionsSuccessStatus: 200
 }
 app.use(cors(corsOptions))
@@ -48,27 +51,35 @@ app.use(express.urlencoded({
 	extended: false
 }));
 app.use(cookieParser());
-app.use(express.static('publica'));
-app.use(expressJwt({
-	secret: config.secret
-}).unless({
-	path: ["/api/auth/login",
-		"/api/auth/signup",
-		"/api/auth/forgot",
-		"/api/auth/reset"
-	]
-}));
+// app.use(express.static('publica'));
+// app.use(expressJwt({
+// 	secret: config.secret
+// }).unless({
+// 	path: ["/auth/*",
+// 		"/api/auth/signup",
+// 		"/api/auth/forgot",
+// 		"/api/auth/reset"
+// 	]
+// }));
 
+app.use(session({
+	secret: config.secret,
+	resave: true,
+	saveUninitialized: true
+  }));
+  app.use(passport.initialize());
+  app.use(passport.session());
+  
 // MIDDLEWARES
 app.use(logger('dev'));
 
 // ROUTES
 app.use('/', indexRouter);
-app.use('/api/auth', authRouter);
 app.use('/api/post', postRouter);
 app.use('/api/profilRouter', profilRouter);
 app.use('/api/profession', professionRouter);
 app.use('/api/supportRouter', supportRouter);
+app.use('/auth', authRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

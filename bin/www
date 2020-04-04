@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('../src/index.js');
 var debug = require('debug')('brontrixnodeapi:server');
 var http = require('http');
 

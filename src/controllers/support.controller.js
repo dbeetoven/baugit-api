@@ -1,20 +1,20 @@
-const postCtrl = {};
-const Post = require('../models/post.model.js');
+const supportCtrl = {};
+const Support = require('../models/support.model.js');
 
 
-postCtrl.getAll = (req, res) => {
-    Post.find().select('-__v -created_at -updated_at').exec().then((posts) => {
-        res.status(200).json(posts);
+supportCtrl.getAll = (req, res) => {
+    Support.find().select('-__v -created_at -updated_at').exec().then((supports) => {
+        res.status(200).json(supports);
     }).catch(err => {
         res.status(500).send("Fail! Error -> " + err);
     });
 };
 
-postCtrl.create = (req, res) => {
+supportCtrl.create = (req, res) => {
     console.log("Processing func -> create support.");
-    const post = new Post(req.body);
-    post.save().then(postSaved => {
-        console.log(JSON.stringify(postSaved));
+    const support = new Support(req.body);
+    support.save().then(supportSaved => {
+        console.log(JSON.stringify(supportSaved));
         res.status(200)
             .json({
                 message: "Message registered successfully!"
@@ -26,4 +26,5 @@ postCtrl.create = (req, res) => {
             });
     });
 };
-module.exports= postCtrl;
+
+module.exports = supportCtrl;
