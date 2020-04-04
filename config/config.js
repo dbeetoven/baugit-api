@@ -12,15 +12,16 @@
 //     'database': 'mongodb://dbeetoven:41Rdq0criPf29GyD@brontrix-shard-00-00-scfll.mongodb.net:27017,brontrix-shard-00-01-scfll.mongodb.net:27017,brontrix-shard-00-02-scfll.mongodb.net:27017/test?ssl=true&replicaSet=Brontrix-shard-0&authSource=admin&retryWrites=true'
 
 // };
-
-const dotenv = require('dotenv');
-dotenv.config();
+if (process.env.NODE_ENV !== "production") {
+  const dotenv = require("dotenv");
+  dotenv.config();
+}
 
 module.exports = {
-    secret: process.env.API_SECRET,
-    url: process.env.MONGO_LOCAL,
-    senderMail: process.env.SENDER_MAIL,
-    senderPassword:process.env.SENDER_PASSWORD,
-    ROLES:process.env.ROLES,
-    database:process.env.MONGO_URL
-}
+  secret: process.env.API_SECRET,
+  url: process.env.MONGO_LOCAL,
+  senderMail: process.env.SENDER_MAIL,
+  senderPassword: process.env.SENDER_PASSWORD,
+  ROLES: process.env.ROLES,
+  database: process.env.MONGO_URL,
+};
