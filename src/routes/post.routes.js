@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const postCtrl = require('../controllers/post.controller');
-const authJwt = require('../middlewares/verifyJwtToken');
+const postCtrl = require('../controllers/postController');
 
-router.post('/',[authJwt.verifyToken], postCtrl.create);
-router.get('/', postCtrl.getAll);
+const verifyAuth =require ('../middlewares/verifyAuth');
+router.post('/buses', verifyAuth, addBusDetails);
+router.get('/buses', verifyAuth, getAllBuses);
+
 
 
 module.exports = router;

@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router();
+// const profilRouter = require('./post.routes');
+const profilRouter = require('./post.routes');
+// const postRouter = require('./routes/post.routes');
+// const supportRouter = require('./routes/support.routes');
+// const professionRouter = require('./routes/profession.routes');
+// const authRouter = require('./routes/auth.routes');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('Baugit App', { title: 'Brontrix Api' });
-});
 module.exports = router;

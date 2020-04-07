@@ -1,7 +1,6 @@
-const passport = require("passport");
-const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
-const config = require("../config/config");
-var User = require('../models/auth.model');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const config = require('../config/config');
 
 passport.use(
   new GoogleStrategy(
@@ -10,16 +9,16 @@ passport.use(
       clientSecret: config.googleClientSecret,
       callbackURL: config.googleCallBack,
     },
-    function (accessToken, refreshToken, profile, done) {
-      User.findOrCreate(
-        { userid: profile.id },
-        { name: profile.displayName, userid: profile.id },
-        function (err, user) {
-          return done(err, user);
-        }
-      );
-    }
-  )
+    (accessToken, refreshToken, profile, done) => {
+      return done(err, profile);
+    },
+  ),
 );
 
+passport.serializeUser(function(user, done) {
+  done(null, user)
+})
+passport.deserializeUser(function(obj, done) {
+  done(null, obj)
+})
 module.exports = passport;
