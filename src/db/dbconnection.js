@@ -1,41 +1,4 @@
-const { Pool } = require('pg');
-const dotenv = require('dotenv');
-
-dotenv.config({ silent: true });
-
-const databaseConfig = {
-  user: process.env.DATABASE_USER,
-  host: process.env.DATABASE_HOST,
-  database: process.env.DATABASE_DATABASE,
-  password: process.env.DATABASE_PASSWORD,
-  port: process.env.DATABASE_PORT,
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
-  ssl: {
-    rejectUnauthorized: false,
-}}
-
-
-const pool = new Pool(databaseConfig);
-pool.on('connect', client => {
-  console.log('pool connected...')
-})
-pool.on('error', (err, client) => {
-  console.error('Error:', err);
-  // pool.end();
-});
-process.on('unhandledRejection', error => {
-  pool.end();
-});
-
-/**
- * Create User Table
- * CREATE TABLE test
-  (id SERIAL PRIMARY KEY, 
-  name VARCHAR(100) UNIQUE NOT NULL, 
-  phone VARCHAR(100));
- */
+const db = require('./index')
 
 const createUserTable = () => {
   const userCreateQuery = `CREATE TABLE IF NOT EXISTS users
@@ -47,15 +10,15 @@ const createUserTable = () => {
   password VARCHAR(100) NOT NULL,
   created_on DATE NOT NULL)`;
 
-  pool
+  db
     .query(userCreateQuery)
     .then((res) => {
       console.log(res);
-      pool.end();
+      db.end();
     })
     .catch((err) => {
       console.log(err);
-      pool.end();
+      db.end();
     });
 };
 
@@ -72,15 +35,15 @@ const createBusTable = () => {
     capacity integer NOT NULL,
     created_on DATE NOT NULL)`;
 
-  pool
+  db
     .query(busCreateQuery)
     .then((res) => {
       console.log(res);
-      pool.end();
+      db.end();
     })
     .catch((err) => {
       console.log(err);
-      pool.end();
+      db.end();
     });
 };
 
@@ -90,15 +53,15 @@ const createBusTable = () => {
  */
 const dropUserTable = () => {
   const usersDropQuery = 'DROP TABLE IF EXISTS users';
-  pool
+  db
     .query(usersDropQuery)
     .then((res) => {
       console.log(res);
-      pool.end();
+      db.end();
     })
     .catch((err) => {
       console.log(err);
-      pool.end();
+      db.end();
     });
 };
 
