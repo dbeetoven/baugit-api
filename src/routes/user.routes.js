@@ -1,17 +1,9 @@
 
 var express = require('express');
 var router = express.Router();
-var authMDW = require('../middlewares/auth.middleware');
+// const auth = require(../middleware/auth'')
 
-// router.get('/',[authMDW.verifyJWT_MW],(req, res, next) => {
-//   res.send('respond with a resource');
-// });
-
-// router.post('/',[authMDW.verifyJWT_MW], (req, res) => {
-//     res.send('respond with a resource');
-// });
-/* GET users listing. */
-router.get('/', ensureAuthenticated, function(req, res, next) {
+router.get('/', function(req, res, next) {
   res.render('user', { user: req.user });
 });
 function ensureAuthenticated(req, res, next) {
