@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
+const db = require('./db/index')
 const {createAllTables}= require('./db/dbconnection');
 // const mongoose = require('mongoose');
 const config = require('./config/config');
@@ -68,7 +69,7 @@ app.use((err, req, res, next) => {
 // mongoose.connect(config.database, { useNewUrlParser: true, useFindAndModify: false });
 
 // mongoose.set('debug', true);
-createAllTables();
+createAllTables(db);
 
 const PORT = config.port || 3000;
 app.listen(PORT, () => console.log(`🚀 are live on ${PORT}`));

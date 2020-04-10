@@ -1,5 +1,5 @@
 {
-  "name": "brontrixnodeapi",
+  "name": "baugit",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -39,6 +39,6 @@
     "nodemon": "^2.0.2"
   },
   "engines": {
-    "node": "12.16"
+    "node": "12.16.1"
   }
 }

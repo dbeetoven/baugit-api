@@ -25,7 +25,7 @@ pool.on('connect', client => {
 })
 pool.on('error', (err, client) => {
   console.error('Error:', err);
-  // pool.end();
+  process.exit(-1)
 });
 process.on('unhandledRejection', error => {
   pool.end();
@@ -33,5 +33,6 @@ process.on('unhandledRejection', error => {
 
 
 module.exports = {
-  query: (text, params) => pool.query(text, params),
-}
+  query: (text, params, callback) => pool.query(text, params),
+  end:()=>pool.end()
+  }

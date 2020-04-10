@@ -1,6 +1,7 @@
 const moment = require('moment');
 
-const {dbQuery} = require('../db/dbQueries');
+const db = require('../db')
+
 
 const {
   hashPassword,
@@ -43,7 +44,7 @@ const createUser = async (req, res) => {
   const values = [email, first_name, last_name, hashedPassword, created_on];
 
   try {
-    const { rows } = await dbQuery(createUserQuery, values);
+    const { rows } = await db.query(createUserQuery, values);
     const dbResponse = rows[0];
     delete dbResponse.password;
     const token = generateUserToken(
@@ -86,7 +87,7 @@ const siginUser = async (req, res) => {
   }
   const signinUserQuery = 'SELECT * FROM users WHERE email = $1';
   try {
-    const { rows } = await dbQuery(signinUserQuery, [email]);
+    const { rows } = await db.query(signinUserQuery, [email]);
     const dbResponse = rows[0];
     if (!dbResponse) {
       errorMessage.error = 'User with this email does not exist';

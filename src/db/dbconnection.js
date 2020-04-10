@@ -1,6 +1,6 @@
-const db = require('./index')
 
-const createUserTable = () => {
+const createUserTable = (db) => {
+  console.log(db)
   const userCreateQuery = `CREATE TABLE IF NOT EXISTS users
   (id SERIAL PRIMARY KEY, 
   email VARCHAR(100) UNIQUE NOT NULL, 
@@ -10,8 +10,7 @@ const createUserTable = () => {
   password VARCHAR(100) NOT NULL,
   created_on DATE NOT NULL)`;
 
-  db
-    .query(userCreateQuery)
+  db.query(userCreateQuery)
     .then((res) => {
       console.log(res);
       db.end();
@@ -25,7 +24,7 @@ const createUserTable = () => {
 /**
  * Create Buses Table
  */
-const createBusTable = () => {
+const createBusTable = (db) => {
   const busCreateQuery = `CREATE TABLE IF NOT EXISTS post
     (id SERIAL PRIMARY KEY,
     number_plate VARCHAR(100) NOT NULL,
@@ -35,8 +34,7 @@ const createBusTable = () => {
     capacity integer NOT NULL,
     created_on DATE NOT NULL)`;
 
-  db
-    .query(busCreateQuery)
+  db.query(busCreateQuery)
     .then((res) => {
       console.log(res);
       db.end();
@@ -51,7 +49,7 @@ const createBusTable = () => {
 /**
  * Drop User Table
  */
-const dropUserTable = () => {
+const dropUserTable = (db) => {
   const usersDropQuery = 'DROP TABLE IF EXISTS users';
   db
     .query(usersDropQuery)
@@ -69,17 +67,17 @@ const dropUserTable = () => {
 /**
  * Create All Tables
  */
-const createAllTables = () => {
-  createUserTable();
-  createBusTable();
+const createAllTables = (db) => {
+  createUserTable(db);
+  createBusTable(db);
 };
 
 /**
  * Drop All Tables
  */
-const dropAllTables = () => {
-  dropUserTable();
-  dropBusTable();
+const dropAllTables = (db) => {
+  dropUserTable(db);
+  dropBusTable(db);
 };
 
 module.exports = {
