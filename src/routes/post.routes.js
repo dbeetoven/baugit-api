@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const postCtrl = require('../controllers/postController');
+const {create,findAll} = require('../controllers/postController');
 
-const verifyAuth =require ('../middlewares/verifyAuth');
-router.post('/buses', verifyAuth, addBusDetails);
-router.get('/buses', verifyAuth, getAllBuses);
+const verifyAuth = require('../middlewares/verifyAuth');
 
-
+router.post('/create', verifyAuth,create);
+router.get('/findAll', verifyAuth,findAll);
 
 module.exports = router;

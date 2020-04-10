@@ -6,9 +6,8 @@
     "start": "node src/app.js",
     "local": "nodemon rs ./bin/www"
   },
-  "author": {
-    "name": "dbeetoven"
-  },
+  "author": "dbeetoven",
+  "description": "baugit node express jwt API.",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -17,13 +16,13 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-jwt": "^5.3.1",
+    "helmet": "^3.22.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.7",
     "morgan": "~1.10.0",
     "nodemailer": "^6.4.6",
-    "pug": "^2.0.4",
     "validator": "^13.0.0"
   },
   "devDependencies": {

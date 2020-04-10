@@ -1,39 +1,39 @@
 
 const express = require('express');
-// const path = require('path');
-const logger = require('morgan');
+const morgan = require('morgan');
 const cors = require('cors');
+const helmet = require('helmet');
 const mongoose = require('mongoose');
-const appRoutes = require('./routes');
 const config = require('./config/config');
 require('./db');
 
+//  APP Routes 
+const authRoute = require('./routes/auth.routes');
+const profileRoute = require('./routes/profil.routes');
+
 // App Config
 const app = express();
-appRoutes(app); // Routes 
-app.use(require('morgan')('dev'));
-app.use(express.json())
+app.use(morgan('combined'));
+app.use(express.json());
+app.use(helmet());
 
-// Configure mongoose's promise to global promise
-
+app.use('/api/v1', authRoute);
+app.use('/api/v1', profileRoute);
 
 mongoose.set('debug', true);
-// view engine setup
-// app.use(express.static(path.join(__dirname, 'public')));
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'pug');
+
 
 app.get('/', (request, response) => response.json({ info: 'Node.js, Express, and Postgres API' }));
 
 // Mildeware
 app.use((err, req, res, next) => {
+  res.setHeader('Content-type','application/json');
   if (err instanceof SyntaxError)
     return res.status(400).send(
       JSON.stringify({
         error: 'Invalid JSON',
       }),
     );
-  console.error(err);
   res.status(500).send();
 });
 
@@ -49,6 +49,8 @@ app.use(
     },
   }),
 );
+
+app.options('*',cors());
 
 const PORT = config.port || 3000;
 app.listen(PORT, () => console.log(`🚀 are live on ${PORT}`));

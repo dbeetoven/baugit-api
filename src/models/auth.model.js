@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken')
 var   Schema  = mongoose.Schema;
 
 const userSchema = mongoose.Schema({
-    username: {type : String, required : true,  trim: true},
+    username: {type : String, required : true,unique:true,  trim: true},
     email: {
         type: String,
         required: true,
@@ -29,10 +29,11 @@ const userSchema = mongoose.Schema({
             required: true
         }
     }],
-    created_at: { type: Date, default: Date.now },
+    permissionLevel: {type:Number,default:1},
+    created_at: { type: Date, default: Date.now }
 })
 
-userSchema.pre('save', async (next) =>{
+userSchema.pre('save', async function (next) {
     const user = this
     if (user.isModified('password')) {
         user.password = await bcrypt.hash(user.password, 8)
@@ -40,7 +41,7 @@ userSchema.pre('save', async (next) =>{
     next()
 })
 
-userSchema.methods.generateAuthToken = async ()=> {
+userSchema.methods.generateAuthToken = async function() {
     const user = this
     const token = jwt.sign({_id: user._id}, process.env.JWT_KEY)
     user.tokens = user.tokens.concat({token})
@@ -49,8 +50,7 @@ userSchema.methods.generateAuthToken = async ()=> {
 }
 
 userSchema.statics.findByCredentials = async (email, password) => {
-
-    const user = await User.findOne({ email} )
+    const user = await User.findOne({ email} ).exec();
     if (!user) {
         throw new Error({ error: 'Invalid login credentials' })
     }

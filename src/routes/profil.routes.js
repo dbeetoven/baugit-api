@@ -1,12 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const profilCtrl = require('../controllers/profil.controller')
-const authJwt = require('../middlewares/verifyJwtToken');
+const { findAll, create } = require('../controllers/profilController');
+const verifyAuth = require('../middlewares/verifyAuth');
 
-router.post('/',[authJwt.verifyToken],profilCtrl.create);
-router.get('/:id',[authJwt.verifyToken],profilCtrl.getById);
-router.get('/',[authJwt.verifyToken],profilCtrl.getAll);
-router.put('/:id',[authJwt.verifyToken],profilCtrl.update);
-router.delete('/:id',[authJwt.verifyToken],profilCtrl.deleteById);
+router.post('/create', verifyAuth,create);
+router.get('/findAll', verifyAuth,findAll);
 
 module.exports = router;
