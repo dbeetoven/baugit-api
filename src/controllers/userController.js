@@ -2,7 +2,6 @@ const moment = require('moment');
 
 const db = require('../db')
 
-
 const {
   hashPassword,
   comparePassword,

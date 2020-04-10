@@ -1,37 +1,21 @@
-const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
-const { errorMessage, status } = require('../helpers/status');
+const jwt = require('jsonwebtoken')
+const User = require('../models/User')
 
-dotenv.config();
+const verifyAuth = async(req, res, next) => {
+    const token = req.header('Authorization').replace('Bearer ', '')
+    const data = jwt.verify(token, process.env.JWT_KEY)
+    try {
+        const user = await User.findOne({ _id: data._id, 'tokens.token': token })
+        if (!user) {
+            throw new Error()
+        }
+        req.user = user
+        req.token = token
+        next()
+    } catch (error) {
+        res.status(401).send({ error: 'Not authorized to access this resource' })
+    }
 
-/**
- * Verify Token
- * @param {object} req
- * @param {object} res
- * @param {object} next
- * @returns {object|void} response object
- */
+}
 
-const verifyToken = async (req, res, next) => {
-  const { token } = req.headers;
-  if (!token) {
-    errorMessage.error = 'Token not provided';
-    return res.status(status.bad).send(errorMessage);
-  }
-  try {
-    const decoded = jwt.verify(token, process.env.SECRET);
-    req.user = {
-      email: decoded.email,
-      user_id: decoded.user_id,
-      is_admin: decoded.is_admin,
-      first_name: decoded.first_name,
-      last_name: decoded.last_name,
-    };
-    next();
-  } catch (error) {
-    errorMessage.error = 'Authentication Failed';
-    return res.status(status.unauthorized).send(errorMessage);
-  }
-};
-
-module.exports.default= verifyToken;
+module.exports = verifyAuth
