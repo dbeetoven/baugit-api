@@ -8,6 +8,7 @@ const config = require('./config/config');
 require('./db');
 
 //  APP Routes 
+const commonRoute = require('./routes/common.routes');
 const authRoute = require('./routes/auth.routes');
 const profileRoute = require('./routes/profil.routes');
 
@@ -17,8 +18,9 @@ app.use(morgan('combined'));
 app.use(express.json());
 app.use(helmet());
 
-app.use('/api/v1', authRoute);
-app.use('/api/v1', profileRoute);
+app.use('/api/v1/common', commonRoute);
+app.use('/api/v1/auth', authRoute);
+app.use('/api/v1/profile', profileRoute);
 
 mongoose.set('debug', true);
 

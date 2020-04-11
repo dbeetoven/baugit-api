@@ -1,11 +1,11 @@
 const Auth = require('../models/auth.model');
+const Profile = require('../models/profil.model');
 
 const signUp = async (req, res) => {
   try {
     const user = new Auth(req.body);
     await user.save();
     const token = await user.generateAuthToken();
-
     res.status(201).send({ user, token });
   } catch (error) {
     res.status(400).send(error);
@@ -20,8 +20,9 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(401).send({ error: 'Login failed! Check authentication credentials' });
     }
+    const profile= await Profile.findById({_id:user._id}).exec();
     const token = await user.generateAuthToken();
-    res.send({ user, token });
+    res.send({ user, token,profile });
   } catch (error) {
     res.status(400).json({
       error,
@@ -54,8 +55,9 @@ const logoutAll = async (req, res) => {
 
 const me = async (req, res) => {
   try {
-    console.log(req.user);
-    res.status(200).send(req.user);
+    const user= req.user;
+    delete user['password'];
+    res.status(200).send(user);
   } catch (error) {
     res.status(500).send(error);
   }
