@@ -2,8 +2,8 @@ const Post = require('../models/post.model');
 
 const create = async (req, res) => {
   try {
-    if(req.body)
-    const post = await Post.create(req.body)
+    
+    const post = await new Post(req.body).save();
     res.status(200).json(post);
   } catch (error) {
     res.status(400).send(error);

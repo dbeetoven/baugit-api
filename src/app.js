@@ -17,8 +17,8 @@ app.use(morgan('combined'));
 app.use(express.json());
 app.use(helmet());
 
-app.use('/api/v1', authRoute);
-app.use('/api/v1', profileRoute);
+app.use('/api/v1/auth', authRoute);
+app.use('/api/v1/profile', profileRoute);
 
 mongoose.set('debug', true);
 

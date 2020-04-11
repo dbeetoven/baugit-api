@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const {addressSubschema}=require('./abstract.model')
+const {addressSubschema,phoneSchema,socialSchema,experience}=require('./abstract.model')
 const Schema = mongoose.Schema;
 
 const profileSchema = new Schema({
@@ -10,19 +10,19 @@ const profileSchema = new Schema({
   cuil: { type: String,unique:true, maxlength: 64 },
   doc_type: { type: String, maxlength: 36 },
   sex: { type: String, enum: ['M', 'F'] },
-  phones: [{ type: String, required: true, maxlength: 36 }],
-  nationality: { type: String, required: true, maxlength: 64 },
+  phones: [{phoneSchema}],
+  nationality: { type: String, maxlength: 64 },
   address: addressSubschema,
-  biography: { type: String, maxlength: 256 },
-  socialLinks: [{ type: String, required: true, maxlength: 256 }],
-  company:[{type:String, maxlength:128}],
-  startDate:[{type:String, maxlength:36}],
+  biography: { type: String, maxlength: 524 },
+  socialLinks: [{socialSchema}],
+  company:{type:String, maxlength:128},
+  experiences:[{experience}]
+  startDate:{type:String, maxlength:36},
   birthday: { type: String },
   rating: { type: Number, default: 0 },
   likes: { type: Number, default: 0 },
   dislikes: { type: Number, default: 0 },
   approved:{type:Boolean,default:false},
-  permissionLevel:{type:Number},
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
 });
