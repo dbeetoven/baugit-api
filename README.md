@@ -3,9 +3,9 @@
 ### build with `Node` Api and  `React js` in front end.
 
 
-### Plugins
+### **Plugins**
 
-mongoose 
+- mongoose 
 - express
 - express-jwt
 - body-parser
@@ -26,17 +26,17 @@ mongoose
 *  ``npm install``
 *  ```npm i nodemon -g```
 
-### Run 
+### **Run** 
 
 *  `nodemon` or `npm run local` or `npm run start`
 *  .env file requiere.
 
 ***
-### demo
+### **Demo**
 
 -  heroku [DEMO](https://heroku.com).
 
 
-##### About
+### **About**
  
  * [@Author](http:dbeetoven.me/dbeetoven)
