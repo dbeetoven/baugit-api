@@ -19,7 +19,7 @@ const experience = {
   position: { type: String,required:true },
   location: { type: String },
   description: { type: String },
-  startedDate: { type: Date required:true },
+  startedDate: { type: Date,required:true },
   endDate: { type: Date },
   companyUrl:{ type: String }
 };

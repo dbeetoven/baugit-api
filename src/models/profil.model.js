@@ -16,8 +16,7 @@ const profileSchema = new Schema({
   biography: { type: String, maxlength: 524 },
   socialLinks: [{socialSchema}],
   company:{type:String, maxlength:128},
-  experiences:[{experience}]
-  startDate:{type:String, maxlength:36},
+  experiences:[{experience}],
   birthday: { type: String },
   rating: { type: Number, default: 0 },
   likes: { type: Number, default: 0 },
