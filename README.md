@@ -2,7 +2,7 @@
 
 ### build with `Node` Api and  `React js` in front end.
 
-
+***
 ### **Plugins**
 
 - mongoose 
@@ -19,7 +19,7 @@
 - nodemailer
 - morgan
 - moment
-
+****
 ### **Instalation**
 
 * *node* `v12` requiere
