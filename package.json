@@ -8,9 +8,11 @@
   },
   "author": "dbeetoven",
   "description": "baugit node express jwt API.",
+  "main": "src/app.js",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "debug": "~4.1.1",
     "dotenv": "^8.2.0",
@@ -32,5 +34,13 @@
   },
   "engines": {
     "node": "12.16.1"
-  }
+  },
+  "keywords": [
+    "node",
+    "mongodb",
+    "mongoose",
+    "baugit",
+    "express",
+    "express-jwt"
+  ]
 }

@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const config = require('./config/config');
 require('./db');
 
@@ -15,7 +16,10 @@ const profileRoute = require('./routes/profil.routes');
 // App Config
 const app = express();
 app.use(morgan('combined'));
-app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+
 app.use(helmet());
 
 app.use('/api/v1/common', commonRoute);
