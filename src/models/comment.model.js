@@ -10,7 +10,6 @@ const commentSchema = new Schema({
   commentBy: { type: String, required: true },
   title: { type: String, required: true },
   isDeleted:{type:Boolean, default:false}
-  url: { type: String },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
 });
