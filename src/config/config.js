@@ -5,8 +5,6 @@
 module.exports = {
   secret: process.env.API_SECRET,
   url: process.env.MONGO_LOCAL,
-  senderMail: process.env.SENDER_MAIL,
-  senderPassword: process.env.SENDER_PASSWORD,
   ROLES: process.env.ROLES,
   database: process.env.MONGODB_URL,
   port:process.env.PORT,
