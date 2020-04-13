@@ -3,7 +3,7 @@ const PostCategory = require('../models/postCategory.model');
 const postCategory = async (req, res) => {
   try {
     const postCategories = await PostCategory.find().exec();
-    (!postCategories){
+    if(!postCategories){
       return res.status(404).send({ error: 'Post categories not foud' });
     } 
     res.status(200).json(postCategories);
