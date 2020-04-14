@@ -19,6 +19,16 @@ app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (config.whitleListDomain.indexOf(origin) !== -1 || !origin) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+app.use(cors(corsOptions));
 
 app.use(helmet());
 
@@ -43,20 +53,6 @@ app.use((err, req, res, next) => {
   res.status(500).send();
 });
 
-// Cors Domain
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-      if (config.whitleListDomain.indexOf(origin) === -1) {
-        return callback(new Error(config.corsError), false);
-      }
-      return callback(null, true);
-    },
-  }),
-);
-
-app.options('*',cors());
 
 const PORT = config.port || 3000;
 app.listen(PORT, () => console.log(`🚀 are live on ${PORT}`));
