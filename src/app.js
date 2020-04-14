@@ -19,7 +19,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(helmet());
 
-
 // App Mildeware
 const corsOptions = {
   origin: function (origin, callback) {
@@ -31,28 +30,27 @@ const corsOptions = {
   },
 };
 
-app.use((err, req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method',
-  );
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+// app.use((err, req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header(
+//     'Access-Control-Allow-Headers',
+//     'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method',
+//   );
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
 
-  res.setHeader('Content-type', 'application/json');
-  if (err instanceof SyntaxError)
-    return res.status(400).send(
-      JSON.stringify({
-        error: 'Invalid JSON',
-      }),
-    );
-  res.status(500).send();
-});
+//   res.setHeader('Content-type', 'application/json');
+//   if (err instanceof SyntaxError)
+//     return res.status(400).send(
+//       JSON.stringify({
+//         error: 'Invalid JSON',
+//       }),
+//     );
+//   res.status(500).send();
+// });
 
-
-app.use('/api/v1/common',cors(corsOptions), commonRoute);
-app.use('/api/v1/auth',cors(corsOptions), authRoute);
-app.use('/api/v1/profile',cors(corsOptions), profileRoute);
+app.use('/api/v1/common', commonRoute);
+app.use('/api/v1/auth', authRoute);
+app.use('/api/v1/profile', profileRoute);
 
 app.get('/', (request, response) => response.json({ info: 'Baugit Node Api.' }));
 
