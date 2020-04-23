@@ -16,11 +16,11 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await Auth.findByCredentials(email, password);
-
+    delete user['password'];
     if (!user) {
       return res.status(401).send({ error: 'Login failed! Check authentication credentials' });
     }
-    const profile= await Profile.findById({_id:user._id}).exec();
+    // const profile= await Profile.findById({_id:user._id}).exec();
     const token = await user.generateAuthToken();
     res.send({ user, token,profile });
   } catch (error) {

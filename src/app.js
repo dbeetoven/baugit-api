@@ -21,15 +21,19 @@ app.use(helmet());
 
 
 // App Mildeware
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (config.whitleListDomain.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-};
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     if (config.whitleListDomain.indexOf(origin) !== -1 || !origin) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+// };
+
+app.use(cors({
+  origin: 'http://localhost:3000'
+}));
 
 app.use((err, req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
